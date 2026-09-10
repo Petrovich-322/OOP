@@ -1,0 +1,23 @@
+{
+  "version": "2.0.0",
+  "windows": {
+    "options": {
+      "shell": {
+        "executable": "cmd.exe",
+        "args": ["/d", "/c"]
+      }
+    }
+  },
+  "tasks": [
+    {
+      "label": "Build WinAPI",
+      "type": "shell",
+      "command": "call \"C:\\Program Files\\Microsoft Visual Studio\\2022\\Community\\VC\\Auxiliary\\Build\\vcvars64.bat\" && rc.exe /c 65001 /i \"Header Files\" /fo Lab1.res \"Resource Files\\lab1.rc\" && cl.exe /EHsc /utf-8 /DUNICODE /D_UNICODE /I \"Header Files\" \"Source Files\\*.cpp\" Lab1.res user32.lib gdi32.lib comctl32.lib /Fe:Lab1.exe",
+      "group": {
+        "kind": "build",
+        "isDefault": true
+      },
+      "problemMatcher": ["$msCompile"]
+    }
+  ]
+}
