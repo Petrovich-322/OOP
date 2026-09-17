@@ -64,12 +64,12 @@ ATOM MyRegisterClass(HINSTANCE hInstance)
     wcex.cbClsExtra     = 0;
     wcex.cbWndExtra     = 0;
     wcex.hInstance      = hInstance;
-    wcex.hIcon          = LoadIcon(hInstance, MAKEINTRESOURCE(IDI_LAB1));
     wcex.hCursor        = LoadCursor(nullptr, IDC_ARROW);
     wcex.hbrBackground  = (HBRUSH)(COLOR_WINDOW+1);
     wcex.lpszMenuName   = MAKEINTRESOURCEW(IDC_LAB1);
     wcex.lpszClassName  = szWindowClass;
-    wcex.hIconSm        = LoadIcon(wcex.hInstance, MAKEINTRESOURCE(IDI_SMALL));
+    wcex.hIcon          = LoadIcon(nullptr, IDI_APPLICATION);
+    wcex.hIconSm        = LoadIcon(nullptr, IDI_APPLICATION);
 
     return RegisterClassExW(&wcex);
 }
@@ -156,18 +156,20 @@ INT_PTR CALLBACK About(HWND hDlg, UINT message, WPARAM wParam, LPARAM lParam)
 
 void Work1(HWND hWnd)
 {
-    if (Func_MOD1(hWnd, text))
-    { 
-        InvalidateRect(hWnd, NULL, TRUE);
+    if(!Func_MOD1(hWnd, text)) 
+    {
+        text[0] = _T('\0');
     }
+    InvalidateRect(hWnd, NULL, TRUE);
     return;
 }
 
 void Work2(HWND hWnd)
 {
-    if (Func_MOD2(hWnd, text))
+    if(!Func_MOD2(hWnd, text))
     {
-        InvalidateRect(hWnd, NULL, TRUE);
-    }
+        text[0] = _T('\0');
+    };
+    InvalidateRect(hWnd, NULL, TRUE);
     return;
 }

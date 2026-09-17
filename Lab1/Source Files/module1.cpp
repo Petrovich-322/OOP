@@ -1,4 +1,3 @@
-#include "module1.h"
 #include "module1_resource.h"
 
 static INT_PTR CALLBACK DialogMOD1(HWND hDlg, UINT message, WPARAM wParam, LPARAM lParam)
@@ -36,9 +35,9 @@ static INT_PTR CALLBACK DialogMOD1(HWND hDlg, UINT message, WPARAM wParam, LPARA
                 {
                     LRESULT index = SendDlgItemMessage(hDlg, IDC_LIST1, LB_GETCURSEL, 0, 0);
 
-                    if (index == LB_ERR)
+                    if (index == -1)
                     {
-                        EndDialog(hDlg, 1);
+                        EndDialog(hDlg, 0);
                         return 1;
                         break;
                     }

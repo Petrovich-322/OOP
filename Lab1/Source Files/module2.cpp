@@ -1,4 +1,3 @@
-#include "module2.h"
 #include "module2_resource.h"
 
 static INT_PTR CALLBACK DialogMOD2(HWND hDlg, UINT message, WPARAM wParam, LPARAM lParam)
@@ -38,7 +37,7 @@ int Func_MOD2(HWND hWnd, TCHAR* text)
 {
 	HINSTANCE hInstance = (HINSTANCE)GetWindowLongPtr(hWnd, GWLP_HINSTANCE);
 
-	INT_PTR res = DialogBoxParam(hInstance, MAKEINTRESOURCE(IDD_DIALOG1), hWnd, DialogMOD2, (LPARAM)text);
+	INT_PTR res = DialogBoxParam(hInstance, MAKEINTRESOURCE(IDD_DIALOG2), hWnd, DialogMOD2, (LPARAM)text);
 	
 	return res;
 }
