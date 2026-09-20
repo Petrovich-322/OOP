@@ -1,0 +1,16 @@
+#include <framework.h>
+#include "main_resource.h"
+
+IDC_LAB1 MENU
+BEGIN
+    POPUP "Actions"
+    BEGIN
+        MENUITEM "Work1",   ID_ACTIONS_WORK1
+    END
+END
+
+STRINGTABLE
+BEGIN
+    IDS_APP_TITLE "Lab1"
+    IDC_LAB1 "LAB1"
+END

@@ -1,0 +1,11 @@
+#define IDC_MYICON                      2
+#define IDD_LAB1_DIALOG                 102
+#define IDS_APP_TITLE                   103
+#define IDM_ABOUT                       104
+#define IDC_LAB1                        109
+#define IDR_MAINFRAME                   128
+#define ID_ACTIONS_WORK1                32771
+#define IDC_STATIC                      -1
+
+
+

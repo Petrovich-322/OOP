@@ -1,0 +1,26 @@
+{
+  "version": "2.0.0",
+  "windows": {
+    "options": {
+      "shell": {
+        "executable": "cmd.exe",
+        "args": ["/d", "/c"]
+      }
+    }
+  },
+  "tasks": [
+    {
+      "label": "Build WinAPI (MinGW)",
+      "type": "shell",
+      "options": {
+        "cwd": "${workspaceFolder}"
+      },
+      "command": "C:\\msys64\\ucrt64\\bin\\windres.exe -I \"Header Files\" -i \"Resource Files\\main.rc\" -O coff -o Lab2.res && C:\\msys64\\ucrt64\\bin\\g++.exe -std=c++17 -DUNICODE -D_UNICODE -I \"Header Files\" \"Source Files\\main.cpp\" Lab2.res -o Lab2.exe -mwindows -municode -lcomctl32 -lgdi32",
+      "group": {
+        "kind": "build",
+        "isDefault": true
+      },
+      "problemMatcher": ["$gcc"]
+    }
+  ]
+}
