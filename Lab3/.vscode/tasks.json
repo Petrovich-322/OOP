@@ -15,7 +15,7 @@
       "options": {
         "cwd": "${workspaceFolder}"
       },
-      "command": "C:\\msys64\\ucrt64\\bin\\windres.exe -I \"Header Files\" -i \"Resource Files\\main.rc\" -O coff -o Lab3.res && C:\\msys64\\ucrt64\\bin\\g++.exe -std=c++17 -DUNICODE -D_UNICODE -I \"Header Files\" \"Source Files\\main.cpp\" Lab3.res -o Lab3.exe -mwindows -municode -lcomctl32 -lgdi32",
+      "command": "C:\\msys64\\ucrt64\\bin\\windres.exe -I \"Header Files\" -i \"Resource Files\\main.rc\" -O coff -o Lab3.res && C:\\msys64\\ucrt64\\bin\\g++.exe -std=c++17 -DUNICODE -D_UNICODE -I \"Header Files\" \"Source Files\\main.cpp\" \"Source Files\\editor.cpp\" \"Source Files\\painter.cpp\" \"Source Files\\shapes.cpp\" Lab3.res -o Lab3.exe -mwindows -municode -lcomctl32 -lgdi32",
       "group": {
         "kind": "build",
         "isDefault": true

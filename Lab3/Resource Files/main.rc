@@ -1,5 +1,5 @@
 #include <framework.h>
-#include "main_resource.h"
+#include "resource.h"
 
 IDC_LAB1 MENU
 BEGIN

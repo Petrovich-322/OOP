@@ -103,7 +103,7 @@ class SHAPE
         }
 
         virtual SHAPE* Clone() = 0;
-        virtual void Show(HDC hdc, HPEN hPen) {};
+        virtual void Show(HDC hdc, HPEN hPen) = 0;
 };
 
 class LINE: public SHAPE

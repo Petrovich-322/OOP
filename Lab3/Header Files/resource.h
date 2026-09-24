@@ -1,3 +1,5 @@
+#pragma once
+
 #define IDC_MYICON                      2
 #define IDD_LAB1_DIALOG                 102
 #define IDS_APP_TITLE                   103
