@@ -9,11 +9,17 @@
 #define IDM_ABOUT                       111
 #define IDM_EXIT                        112
 
+
+///Shapes
 #define ID_LINE_CHOOSE                 32772
 #define ID_RECTANGLE_CHOOSE            32773
 #define ID_ELLIPSE_CHOOSE              32774
 #define ID_DOT_CHOOSE                  32775
 
+///Constants
 #define MAX_LOADSTRING 100
 #define MAX_SHAPES 1000
 
+///ToolBar
+#define IDR_TOOLBAR             130
+#define IDB_TOOLBAR             131

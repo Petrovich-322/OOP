@@ -1,6 +1,9 @@
 #include "framework.h"
 #include "main_resource.h"
 
+#include <commctrl.h>
+#pragma comment(lib, "comctl32.lib")
+
 HINSTANCE hInst;
 WCHAR szTitle[MAX_LOADSTRING];
 WCHAR szWindowClass[MAX_LOADSTRING];
@@ -28,7 +31,12 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
     LoadStringW(hInstance, IDS_APP_TITLE, szTitle, MAX_LOADSTRING);
     LoadStringW(hInstance, IDC_LAB1, szWindowClass, MAX_LOADSTRING);
     MyRegisterClass(hInstance);
-
+    
+    INITCOMMONCONTROLSEX icex;
+    icex.dwSize = sizeof(INITCOMMONCONTROLSEX);
+    icex.dwICC = ICC_BAR_CLASSES;
+    InitCommonControlsEx(&icex);
+    
     if (!InitInstance (hInstance, nCmdShow))
     {
         return FALSE;
@@ -75,7 +83,7 @@ BOOL InitInstance(HINSTANCE hInstance, int nCmdShow)
 {
    hInst = hInstance;
 
-   HWND hWnd = CreateWindowW(szWindowClass, szTitle, WS_OVERLAPPEDWINDOW,
+   HWND hWnd = CreateWindowW(szWindowClass, szTitle, WS_OVERLAPPEDWINDOW | WS_CLIPCHILDREN,
       CW_USEDEFAULT, 0, 600, 400, nullptr, nullptr, hInstance, nullptr);
 
    if (!hWnd)
@@ -102,6 +110,7 @@ class SHAPE
             this->y2 = y2;
         }
 
+        virtual ~SHAPE() {}
         virtual SHAPE* Clone() = 0;
         virtual void Show(HDC hdc, HPEN hPen) {};
 };
@@ -148,15 +157,15 @@ class RECTANGLE: public SHAPE
     public:
         void Show(HDC hdc, HPEN hPen) override
         {
+            HBRUSH orangeBrush = CreateSolidBrush(RGB(255, 128, 0));
+            HBRUSH oldBrush = (HBRUSH)SelectObject(hdc, orangeBrush); 
             HPEN oldPen = (HPEN)SelectObject(hdc, hPen);
-            int oldBkMode = SetBkMode(hdc, TRANSPARENT);
-
-            const int dx = abs(x1 - x2), dy = abs(y1 - y2);
             
-            Rectangle(hdc, x1 - dx, y1 - dy, x1 + dx, y1 + dy);
+            Rectangle(hdc, x1, y1, x2, y2);
 
             SelectObject(hdc, oldPen);
-            SetBkMode(hdc, oldBkMode);
+            SelectObject(hdc, oldBrush);
+            DeleteObject(orangeBrush);
         }
 
         SHAPE* Clone() override 
@@ -170,16 +179,13 @@ class ELLIPSE: public SHAPE
     public:
         void Show(HDC hdc, HPEN hPen) override
         {
-            HBRUSH hHollowBrush = (HBRUSH)GetStockObject(HOLLOW_BRUSH);
-            HBRUSH oldBrush = (HBRUSH)SelectObject(hdc, hHollowBrush);
             HPEN oldPen = (HPEN)SelectObject(hdc, hPen);
-            int oldBkMode = SetBkMode(hdc, TRANSPARENT);
 
-            Ellipse(hdc, x1, y1, x2, y2);
+            const int dx = abs(x1 - x2), dy = abs(y1 - y2);
+
+            Ellipse(hdc, x1 - dx, y1 - dy, x1 + dx, y1 + dy);
 
             SelectObject(hdc, oldPen);
-            SelectObject(hdc, oldBrush);
-            SetBkMode(hdc, oldBkMode);
         }
 
         SHAPE* Clone() override 
@@ -200,10 +206,60 @@ static SHAPE* shapes[MAX_SHAPES];
 static SHAPE* protoShape = &protoDot;
 static SHAPE* shape = nullptr;
 
+static HWND hToolbar = NULL;
+
 LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 {
     switch (message)
     {
+    
+    case WM_CREATE:
+        {
+            TBBUTTON tbButtons[] = 
+            {
+                {0, ID_DOT_CHOOSE, TBSTATE_ENABLED, BTNS_BUTTON, {0}, 0, 0},
+                {1, ID_LINE_CHOOSE, TBSTATE_ENABLED, BTNS_BUTTON, {0}, 0, 0},
+                {2, ID_RECTANGLE_CHOOSE, TBSTATE_ENABLED, BTNS_BUTTON, {0}, 0, 0},
+                {3, ID_ELLIPSE_CHOOSE, TBSTATE_ENABLED, BTNS_BUTTON, {0}, 0, 0}
+            };
+            
+            hToolbar = CreateToolbarEx(
+                hWnd,
+                WS_CHILD | WS_VISIBLE | TBSTYLE_FLAT | TBSTYLE_TOOLTIPS,
+                10001,
+                4,
+                hInst,
+                IDB_TOOLBAR,
+                tbButtons,
+                4,
+                16, 15,
+                16, 15,
+                sizeof(TBBUTTON)
+            );
+        }
+        break;
+    case WM_NOTIFY:
+        {
+            LPNMHDR lpnmhdr = (LPNMHDR)lParam;
+
+            if(lpnmhdr->hwndFrom == hToolbar && lpnmhdr->code == NM_CUSTOMDRAW)
+            {
+                LPNMTBCUSTOMDRAW lpNMCustomDraw = (LPNMTBCUSTOMDRAW)lParam;
+                
+                if(lpNMCustomDraw->nmcd.dwDrawStage == CDDS_PREPAINT)
+                {
+                    HBRUSH hBrush = CreateSolidBrush(RGB(220, 230, 242));
+                    
+                    FillRect(lpNMCustomDraw->nmcd.hdc, &lpNMCustomDraw->nmcd.rc, hBrush);
+                
+                    DeleteObject(hBrush);
+
+                    return CDRF_DODEFAULT;
+                }
+            }
+        }
+        break;
+        
     case WM_COMMAND:
         {
             int wmId = LOWORD(wParam);
@@ -238,8 +294,10 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
                 break;
             case IDM_EXIT:
                 DestroyWindow(hWnd);
+                break;
             default:
                 return DefWindowProc(hWnd, message, wParam, lParam);
+                break;
             }
         }
         break;
@@ -269,7 +327,7 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 
             if(shape != nullptr)
             {
-                shape->Show(tempDC, dashPen);
+                shape->Show(tempDC, defPen);
             }
 
             BitBlt(hdc, 0, 0, width, height, tempDC, 0, 0, SRCCOPY);
@@ -311,6 +369,19 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
         break;
 
     case WM_DESTROY:
+        
+        for (int i = 0; i < shapeCount; i++) {
+            delete shapes[i];
+            shapes[i] = nullptr;
+        }
+        
+        shapeCount = 0;
+        
+        if (shape != nullptr) {
+            delete shape;
+            shape = nullptr;
+        }
+        
         PostQuitMessage(0);
         break;
     default:
