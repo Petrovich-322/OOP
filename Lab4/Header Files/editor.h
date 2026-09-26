@@ -13,7 +13,10 @@ private:
     PAINTER painter;
     HINSTANCE hInst = GetModuleHandle(NULL);
 
+    EDITOR() = default;
 public:
+    static EDITOR& GetInstance();
+
     void onCreate(HWND hWnd);
     void onSize(HWND hWnd);
     void onPaint(HWND hWnd);

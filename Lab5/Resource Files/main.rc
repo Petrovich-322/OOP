@@ -16,6 +16,7 @@ BEGIN
         MENUITEM "Line_OO", ID_LINE_OO_CHOOSE
         MENUITEM "Cube", ID_CUBE_CHOOSE
     END
+    MENUITEM "Table", ID_TABLE_OPEN
     POPUP "&Help"
     BEGIN
         MENUITEM "&About ...",      IDM_ABOUT
@@ -32,6 +33,18 @@ BEGIN
     LTEXT         "Lab2, Version 1.0", IDC_STATIC, 42, 14, 114, 8, SS_NOPREFIX
     LTEXT         "Copyright (c) 2026", IDC_STATIC, 42, 26, 114, 8
     DEFPUSHBUTTON "OK", IDOK, 113, 41, 50, 14, WS_GROUP
+END
+
+IDD_TABLEBOX DIALOGEX 0, 0, 260, 180
+STYLE DS_SETFONT | DS_MODALFRAME | WS_POPUP | WS_CAPTION | WS_SYSMENU | WS_VISIBLE
+CAPTION "Shapes table"
+FONT 8, "MS Shell Dlg", 0, 0, 1
+BEGIN
+    LTEXT           "Shapes count: 0", IDC_SHAPES_COUNT_TEXT, 7, 7, 246, 10
+    CONTROL         "", IDC_TABLE_LIST, "SysListView32", 
+                    WS_CHILD | WS_VISIBLE | WS_BORDER | WS_TABSTOP | 
+                    LVS_REPORT | LVS_SINGLESEL, 
+                    7, 20, 246, 150
 END
 
 STRINGTABLE

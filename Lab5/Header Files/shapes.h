@@ -1,5 +1,6 @@
 #pragma once
 #include "framework.h"
+#include <vector>
 
 class SHAPE
 {
@@ -8,10 +9,33 @@ class SHAPE
     public:
         void Set(int x1, int y1, int x2, int y2);
 
+        int GetX1() const;
+        int GetY1() const;
+        int GetX2() const;
+        int GetY2() const;
+
         SHAPE() {}
         virtual ~SHAPE() = default;
         virtual SHAPE* Clone() const = 0;
+        virtual const wchar_t* GetName() const = 0;
         virtual void Show(HDC hdc, HPEN hPen) const = 0;
+};
+
+class CURVE: virtual public SHAPE
+{
+    private:
+        std::vector<POINT> points;
+    public:
+        CURVE() = default;
+        
+        void Show(HDC hdc, HPEN hPen) const override;
+        
+        SHAPE* Clone() const override;
+
+        const wchar_t* GetName() const override;
+
+
+        void AddPoint(int x, int y);
 };
 
 class LINE: virtual public SHAPE
@@ -20,6 +44,8 @@ class LINE: virtual public SHAPE
         void Show(HDC hdc, HPEN hPen) const override;
 
         SHAPE* Clone() const override;
+
+        const wchar_t* GetName() const override;
 };
 
 class DOT: public SHAPE
@@ -28,6 +54,8 @@ class DOT: public SHAPE
         void Show(HDC hdc, HPEN hPen) const override;
 
         SHAPE* Clone() const override;
+
+        const wchar_t* GetName() const override;
 };
 
 class RECTANGLE: virtual public SHAPE
@@ -36,6 +64,8 @@ class RECTANGLE: virtual public SHAPE
         void Show(HDC hdc, HPEN hPen) const override;
 
         SHAPE* Clone() const override;
+
+        const wchar_t* GetName() const override;
 };
 
 class ELLIPSE: virtual public SHAPE
@@ -44,6 +74,8 @@ class ELLIPSE: virtual public SHAPE
         void Show(HDC hdc, HPEN hPen) const override;
 
         SHAPE* Clone() const override;
+
+        const wchar_t* GetName() const override;
 };
 
 class LINE_OO: public LINE, public ELLIPSE
@@ -52,6 +84,8 @@ class LINE_OO: public LINE, public ELLIPSE
         void Show(HDC hdc, HPEN hPen) const override;
   
         SHAPE* Clone() const override;
+
+        const wchar_t* GetName() const override;
 };
 
 class CUBE: public RECTANGLE, public LINE
@@ -60,4 +94,6 @@ class CUBE: public RECTANGLE, public LINE
         void Show(HDC hdc, HPEN hPen) const override;
   
         SHAPE* Clone() const override;
+
+        const wchar_t* GetName() const override;
 };

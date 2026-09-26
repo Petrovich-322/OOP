@@ -1,5 +1,6 @@
 #include "framework.h"
 #include "editor.h"
+#include "table.h"
 
 #pragma comment(lib, "comctl32.lib")
 
@@ -62,7 +63,9 @@ void EDITOR::onLButtonUp(HWND hWnd, WPARAM wParam, LPARAM lParam)
 {
     int endX = GET_X_LPARAM(lParam);
     int endY = GET_Y_LPARAM(lParam);
+
     painter.endDrawing(hWnd, endX, endY);
+    updateTableWindow();
 }
 
 void EDITOR::onPaint(HWND hWnd)
@@ -100,11 +103,14 @@ LRESULT EDITOR::onCommand(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
     int wmId = LOWORD(wParam);
     switch (wmId)
     {
-    case ID_ACTIONS_WORK1:
+    case ID_TABLE_OPEN:
+        tableBoxFunc(hWnd);
+        updateTableWindow();
         break;
 
+    ///                                             SHAPES CHOOSE
     case ID_DOT_CHOOSE:
-        painter.SetProtoShape("dot");
+        painter.SetProtoShape("curve");
         SetWindowText(hWnd, L"Dot");
         break;
 
@@ -112,7 +118,7 @@ LRESULT EDITOR::onCommand(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
         painter.SetProtoShape("line");
         SetWindowText(hWnd, L"Line");
         break;
-    
+
     case ID_RECTANGLE_CHOOSE:
         painter.SetProtoShape("rectangle");
         SetWindowText(hWnd, L"Rectangle");
@@ -122,14 +128,17 @@ LRESULT EDITOR::onCommand(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
         painter.SetProtoShape("ellipse");
         SetWindowText(hWnd, L"Ellipse");
         break;
+
     case ID_LINE_OO_CHOOSE:
         painter.SetProtoShape("line_oo");
         SetWindowText(hWnd, L"line_oo");
         break;
+        
     case ID_CUBE_CHOOSE:
         painter.SetProtoShape("cube");
         SetWindowText(hWnd, L"cube");
         break;
+    ///                                         END OF SHAPE CHOOSE
     case IDM_ABOUT:
         DialogBox(hInst, MAKEINTRESOURCE(IDD_ABOUTBOX), hWnd, AboutDlgProc);
         break;

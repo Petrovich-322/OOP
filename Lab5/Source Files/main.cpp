@@ -26,7 +26,7 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
     
     INITCOMMONCONTROLSEX icex;
     icex.dwSize = sizeof(INITCOMMONCONTROLSEX);
-    icex.dwICC = ICC_BAR_CLASSES;
+    icex.dwICC = ICC_BAR_CLASSES | ICC_LISTVIEW_CLASSES;;
     InitCommonControlsEx(&icex);
     
     if (!InitInstance (hInstance, nCmdShow))
@@ -119,6 +119,7 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
         case WM_LBUTTONUP:
             editor.onLButtonUp(hWnd, wParam, lParam);
             break;
+
         case WM_DESTROY:
             PostQuitMessage(0);
             break;
