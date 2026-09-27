@@ -25,6 +25,8 @@ class EDITOR
         void onMouseMove(HWND hWnd, WPARAM wParam, LPARAM lParam);
         void onLButtonUp(HWND hWnd, WPARAM wParam, LPARAM lParam);
 
+        void SaveShapesFileDialog(HWND hWnd);
+
         LRESULT onCommand(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam);
         LRESULT onNotify(HWND hWnd, WPARAM wParam, LPARAM lParam);
 

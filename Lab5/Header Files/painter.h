@@ -35,9 +35,11 @@ class PAINTER
         
         const std::vector<SHAPE*>& GetShapes() const;
 
-        void startDrawing(HWND hWnd, int startX, int startY);
-        void tempDrawing(HWND hWnd, int endX, int endY);
-        void endDrawing(HWND hWnd, int endX, int endY);
+        void StartDrawing(HWND hWnd, int startX, int startY);
+        void TempDrawing(HWND hWnd, int endX, int endY);
+        void EndDrawing(HWND hWnd, int endX, int endY);
+
+        bool SaveToCSV(const std::wstring& filePath) const;
 
         void DrawAll(HDC hdc) const;
 };

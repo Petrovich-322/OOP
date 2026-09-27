@@ -13,6 +13,11 @@ int SHAPE::GetX1() const { return x1; }
 int SHAPE::GetX2() const { return x2; }
 int SHAPE::GetY1() const { return y1; }
 int SHAPE::GetY2() const { return y2; }
+bool SHAPE::IsSelected() const { return isSelected; }
+void SHAPE::SetIsSelected(bool isSelected)
+{
+    this->isSelected = isSelected;
+}
 
 
 
@@ -44,7 +49,16 @@ void CURVE::AddPoint(int x, int y)
     }
 }
 
-const wchar_t* LINE::GetName() const { return L"line"; }
+std::wstring CURVE::ToCSV() const
+{
+    std::wstring result = std::wstring(GetName()) + L";";
+    for (size_t i = 0; i < points.size(); ++i)
+    {
+        result += std::to_wstring(points[i].x) + L"," + std::to_wstring(points[i].y);
+        if (i + 1 < points.size()) result += L"|";
+    }
+    return result;
+}
 
 SHAPE* CURVE::Clone() const
 {
@@ -56,6 +70,9 @@ SHAPE* CURVE::Clone() const
 }
 
 // LINE
+
+const wchar_t* LINE::GetName() const { return L"line"; }
+
 
 void LINE::Show(HDC hdc, HPEN hPen) const
 {
@@ -83,6 +100,7 @@ void DOT::Show(HDC hdc, HPEN hPen) const
     SetPixel(hdc, x1, y1, RGB(0, 0, 0));
 }
 
+
 const wchar_t* DOT::GetName() const { return L"dot"; }
 
 SHAPE* DOT::Clone() const
@@ -93,6 +111,7 @@ SHAPE* DOT::Clone() const
 
 
 //RECTANGLE
+
 
 void RECTANGLE::Show(HDC hdc, HPEN hPen) const
 {
@@ -117,6 +136,7 @@ SHAPE* RECTANGLE::Clone() const
 
 //ELLIPSE
 
+
 void ELLIPSE::Show(HDC hdc, HPEN hPen) const
 {
     HPEN oldPen = (HPEN)SelectObject(hdc, hPen);
@@ -138,6 +158,7 @@ SHAPE* ELLIPSE::Clone() const
 
 
 //LINE_OO
+
 
 SHAPE* LINE_OO::Clone() const
 {
@@ -163,6 +184,7 @@ const wchar_t* LINE_OO::GetName() const { return L"line_oo"; }
 
 
 //CUBE
+
 
 SHAPE* CUBE::Clone() const
 {

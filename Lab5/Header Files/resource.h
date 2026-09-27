@@ -10,6 +10,7 @@
 #define IDD_ABOUTBOX                    110
 #define IDM_ABOUT                       111
 #define IDM_EXIT                        112
+#define IDM_SAVE                        113
 
 
 ///Shapes

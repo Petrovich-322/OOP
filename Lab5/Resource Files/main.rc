@@ -5,6 +5,7 @@ IDC_LAB1 MENU
 BEGIN
     POPUP "&File"
     BEGIN
+        MENUITEM "Save",            IDM_SAVE
         MENUITEM "E&xit",           IDM_EXIT
     END
     POPUP "Tools"

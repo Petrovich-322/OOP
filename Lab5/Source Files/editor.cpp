@@ -10,6 +10,34 @@ EDITOR& EDITOR::GetInstance()
     return instance;
 }
 
+
+void EDITOR::SaveShapesFileDialog(HWND hWnd)
+{
+    WCHAR fileName[MAX_PATH] = L"shapes.csv";
+
+    OPENFILENAMEW ofn;
+    ZeroMemory(&ofn, sizeof(ofn));
+    ofn.lStructSize = sizeof(ofn);
+    ofn.hwndOwner = hWnd;
+    ofn.lpstrFilter = L"CSV Files (*.csv)\0*.csv\0All Files (*.*)\0*.*\0";
+    ofn.lpstrFile = fileName;
+    ofn.nMaxFile = MAX_PATH;
+    ofn.lpstrDefExt = L"csv";
+    ofn.Flags = OFN_OVERWRITEPROMPT | OFN_PATHMUSTEXIST;
+
+    if (GetSaveFileNameW(&ofn))
+    {
+        if (PAINTER::GetInstance().SaveToCSV(fileName))
+        {
+            MessageBoxW(hWnd, L"File sucessfully saved!", L"Ok", MB_OK | MB_ICONINFORMATION);
+        }
+        else
+        {
+            MessageBoxW(hWnd, L"Failed to save the file.", L"nt", MB_OK | MB_ICONERROR);
+        }
+    }
+}
+
 void EDITOR::onCreate(HWND hWnd)
 {
     TBBUTTON tbButtons[] = 
@@ -49,14 +77,14 @@ void EDITOR::onLButtonDown(HWND hWnd, WPARAM wParam, LPARAM lParam)
 {
     int startX = GET_X_LPARAM(lParam);
     int startY = GET_Y_LPARAM(lParam);
-    painter.startDrawing(hWnd, startX, startY);
+    painter.StartDrawing(hWnd, startX, startY);
 }
 
 void EDITOR::onMouseMove(HWND hWnd, WPARAM wParam, LPARAM lParam)
 {
     int endX = GET_X_LPARAM(lParam);
     int endY = GET_Y_LPARAM(lParam);
-    painter.tempDrawing(hWnd, endX, endY);
+    painter.TempDrawing(hWnd, endX, endY);
 }
 
 void EDITOR::onLButtonUp(HWND hWnd, WPARAM wParam, LPARAM lParam)
@@ -64,7 +92,7 @@ void EDITOR::onLButtonUp(HWND hWnd, WPARAM wParam, LPARAM lParam)
     int endX = GET_X_LPARAM(lParam);
     int endY = GET_Y_LPARAM(lParam);
 
-    painter.endDrawing(hWnd, endX, endY);
+    painter.EndDrawing(hWnd, endX, endY);
     updateTableWindow();
 }
 
@@ -98,57 +126,61 @@ void EDITOR::onPaint(HWND hWnd)
     EndPaint(hWnd, &ps);
 }
 
+
+
 LRESULT EDITOR::onCommand(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 {
     int wmId = LOWORD(wParam);
     switch (wmId)
     {
-    case ID_TABLE_OPEN:
-        tableBoxFunc(hWnd);
-        updateTableWindow();
-        break;
+        case ID_TABLE_OPEN:
+            tableBoxFunc(hWnd);
+            updateTableWindow();
+            break;
+        case IDM_SAVE:
+            SaveShapesFileDialog(hWnd);
+            break;
+        ///                                             SHAPES CHOOSE
+        case ID_DOT_CHOOSE:
+            painter.SetProtoShape("curve");
+            SetWindowText(hWnd, L"Dot");
+            break;
 
-    ///                                             SHAPES CHOOSE
-    case ID_DOT_CHOOSE:
-        painter.SetProtoShape("curve");
-        SetWindowText(hWnd, L"Dot");
-        break;
+        case ID_LINE_CHOOSE:
+            painter.SetProtoShape("line");
+            SetWindowText(hWnd, L"Line");
+            break;
 
-    case ID_LINE_CHOOSE:
-        painter.SetProtoShape("line");
-        SetWindowText(hWnd, L"Line");
-        break;
-
-    case ID_RECTANGLE_CHOOSE:
-        painter.SetProtoShape("rectangle");
-        SetWindowText(hWnd, L"Rectangle");
-        break;
-    
-    case ID_ELLIPSE_CHOOSE:
-        painter.SetProtoShape("ellipse");
-        SetWindowText(hWnd, L"Ellipse");
-        break;
-
-    case ID_LINE_OO_CHOOSE:
-        painter.SetProtoShape("line_oo");
-        SetWindowText(hWnd, L"line_oo");
-        break;
+        case ID_RECTANGLE_CHOOSE:
+            painter.SetProtoShape("rectangle");
+            SetWindowText(hWnd, L"Rectangle");
+            break;
         
-    case ID_CUBE_CHOOSE:
-        painter.SetProtoShape("cube");
-        SetWindowText(hWnd, L"cube");
-        break;
-    ///                                         END OF SHAPE CHOOSE
-    case IDM_ABOUT:
-        DialogBox(hInst, MAKEINTRESOURCE(IDD_ABOUTBOX), hWnd, AboutDlgProc);
-        break;
+        case ID_ELLIPSE_CHOOSE:
+            painter.SetProtoShape("ellipse");
+            SetWindowText(hWnd, L"Ellipse");
+            break;
 
-    case IDM_EXIT:
-        DestroyWindow(hWnd);
-        break;
+        case ID_LINE_OO_CHOOSE:
+            painter.SetProtoShape("line_oo");
+            SetWindowText(hWnd, L"line_oo");
+            break;
+            
+        case ID_CUBE_CHOOSE:
+            painter.SetProtoShape("cube");
+            SetWindowText(hWnd, L"cube");
+            break;
+        ///                                         END OF SHAPE CHOOSE
+        case IDM_ABOUT:
+            DialogBox(hInst, MAKEINTRESOURCE(IDD_ABOUTBOX), hWnd, AboutDlgProc);
+            break;
 
-    default:
-        return DefWindowProc(hWnd, message, wParam, lParam);
+        case IDM_EXIT:
+            DestroyWindow(hWnd);
+            break;
+
+        default:
+            return DefWindowProc(hWnd, message, wParam, lParam);
     }
     return 0;
 }

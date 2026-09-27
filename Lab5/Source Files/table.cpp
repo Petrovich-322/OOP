@@ -3,6 +3,7 @@
 #include "resource.h"
 
 static HWND hTableDlg = NULL;
+static int prevSelectedIndex = -1;
 
 static INT_PTR CALLBACK TableBox(HWND hTb, UINT message, WPARAM wParam, LPARAM lParam)
 {
@@ -27,9 +28,24 @@ static INT_PTR CALLBACK TableBox(HWND hTb, UINT message, WPARAM wParam, LPARAM l
                     LPNMITEMACTIVATE pnmItem = (LPNMITEMACTIVATE)lParam;
                     int rowIndex = pnmItem->iItem;
                     int colIndex = pnmItem->iSubItem;
+                    if(prevSelectedIndex != -1)
+                    {
+                        shapes[prevSelectedIndex]->SetIsSelected(false);
+                    }
+                    if(rowIndex != -1)
+                    {
+                        if(colIndex == 6)
+                        {
+                            painter.RemoveShapeByIndex(rowIndex);
+                            updateTableWindow();
+                        }
 
-                    painter.RemoveShapeByIndex(rowIndex);
-                    updateTableWindow();
+                        else if (colIndex != -1)
+                        {
+                            prevSelectedIndex = rowIndex;
+                            shapes[rowIndex]->SetIsSelected(true);
+                        }
+                    }
                     
                     HWND hMainWnd = GetParent(hTb);
                     InvalidateRect(hMainWnd, NULL, TRUE);
@@ -93,6 +109,8 @@ void updateTableWindow()
 
         wsprintfW(buf, L"%d", shapes[i]->GetY2());
         ListView_SetItemText(hListView, i, 5, buf);
+        
+        ListView_SetItemText(hListView, (int)i, 6, (LPWSTR)L"[ X ]");
     }
 
     SendMessage(hListView, WM_SETREDRAW, TRUE, 0);
@@ -109,10 +127,10 @@ void initTableColumns(HWND hTb)
     LVCOLUMNW lvc = { 0 };
     lvc.mask = LVCF_TEXT | LVCF_WIDTH | LVCF_SUBITEM;
 
-    const wchar_t* headers[] = { L"№", L"Shape", L"X1", L"Y1", L"X2", L"Y2" };
-    int widths[] = { 30, 80, 45, 45, 45, 45 };
+    const wchar_t* headers[] = { L"№", L"Shape", L"X1", L"Y1", L"X2", L"Y2", L"Delete" };
+    int widths[] = { 30, 75, 40, 40, 40, 40, 45};
 
-    for (int i = 0; i < 6; i++)
+    for (int i = 0; i < 7; i++)
     {
         lvc.iSubItem = i;
         lvc.pszText = (LPWSTR)headers[i];
