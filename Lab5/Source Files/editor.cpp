@@ -1,6 +1,4 @@
-#include "framework.h"
 #include "editor.h"
-#include "table.h"
 
 #pragma comment(lib, "comctl32.lib")
 

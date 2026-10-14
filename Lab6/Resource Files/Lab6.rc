@@ -1,0 +1,29 @@
+﻿#include <framework.h>
+#include "resource.h"
+
+IDD_PARAMS_DIALOG DIALOG 0, 0, 220, 120
+    STYLE DS_SETFONT | WS_POPUP | WS_CAPTION | WS_SYSMENU | DS_MODALFRAME
+    CAPTION "Введення параметрів"
+    FONT 8, "MS Shell Dlg"
+    BEGIN
+        LTEXT           "Значення n:", IDC_STATIC, 20, 20, 50, 12
+        EDITTEXT        IDC_EDIT_N, 80, 18, 100, 14, ES_AUTOHSCROLL | ES_NUMBER
+
+        LTEXT           "Значення Min:", IDC_STATIC, 20, 45, 50, 12
+        EDITTEXT        IDC_EDIT_MIN, 80, 43, 100, 14, ES_AUTOHSCROLL
+
+        LTEXT           "Значення Max:", IDC_STATIC, 20, 70, 50, 12
+        EDITTEXT        IDC_EDIT_MAX, 80, 68, 100, 14, ES_AUTOHSCROLL
+
+        DEFPUSHBUTTON   "OK", ID_BTN_OK, 45, 95, 50, 14
+        PUSHBUTTON      "Скасувати", ID_BTN_CANCEL, 115, 95, 50, 14
+END
+
+
+STRINGTABLE
+BEGIN
+    IDS_APP_TITLE "LAB6"
+    IDS_OBJECT2_TITLE "Object2"
+    IDS_OBJECT3_TITLE "Object3"
+    IDC_LAB1 "LAB6"
+END

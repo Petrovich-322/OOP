@@ -1,6 +1,4 @@
 #include "table.h"
-#include "editor.h"
-#include "resource.h"
 
 static HWND hTableDlg = NULL;
 static int prevSelectedIndex = -1;

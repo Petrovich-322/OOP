@@ -1,6 +1,7 @@
 #pragma once
 #include "framework.h"
 #include <vector>
+#include <format>
 
 class SHAPE
 {

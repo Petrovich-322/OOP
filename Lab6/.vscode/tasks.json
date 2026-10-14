@@ -1,0 +1,107 @@
+{
+  "version": "2.0.0",
+  "tasks": [
+    {
+      "label": "Build resources (MinGW)",
+      "type": "process",
+      "command": "C:\\msys64\\ucrt64\\bin\\windres.exe",
+      "args": [
+        "-I", "Header Files",
+        "-i", "Resource Files\\Lab6.rc",
+        "-c", "65001",
+        "-O", "coff",
+        "-o", "Lab6.res"
+      ],
+      "options": {
+        "cwd": "${workspaceFolder}"
+      },
+      "problemMatcher": ["$gcc"]
+    },
+    {
+      "label": "Build Lab6 (MinGW)",
+      "type": "process",
+      "command": "C:\\msys64\\ucrt64\\bin\\g++.exe",
+      "args": [
+        "-std=c++17",
+        "-DUNICODE",
+        "-D_UNICODE",
+        "-I", "Header Files",
+        "Source Files\\Lab6.cpp",
+        "Lab6.res",
+        "-o", "Lab6.exe",
+        "-mwindows",
+        "-municode",
+        "-lcomctl32",
+        "-lgdi32"
+      ],
+      "options": {
+        "cwd": "${workspaceFolder}"
+      },
+      "dependsOn": "Build resources (MinGW)",
+      "group": "build",
+      "problemMatcher": ["$gcc"]
+    },
+    {
+      "label": "Build Object2 (MinGW)",
+      "type": "process",
+      "command": "C:\\msys64\\ucrt64\\bin\\g++.exe",
+      "args": [
+        "-std=c++17",
+        "-DUNICODE",
+        "-D_UNICODE",
+        "-I", "Header Files",
+        "Source Files\\Object2.cpp",
+        "Lab6.res",
+        "-o", "Object2.exe",
+        "-mwindows",
+        "-municode",
+        "-lcomctl32",
+        "-lgdi32"
+      ],
+      "options": {
+        "cwd": "${workspaceFolder}"
+      },
+      "dependsOn": "Build resources (MinGW)",
+      "group": "build",
+      "problemMatcher": ["$gcc"]
+    },
+    {
+      "label": "Build Object3 (MinGW)",
+      "type": "process",
+      "command": "C:\\msys64\\ucrt64\\bin\\g++.exe",
+      "args": [
+        "-std=c++17",
+        "-DUNICODE",
+        "-D_UNICODE",
+        "-I", "Header Files",
+        "Source Files\\Object3.cpp",
+        "Lab6.res",
+        "-o", "Object3.exe",
+        "-mwindows",
+        "-municode",
+        "-lcomctl32",
+        "-lgdi32"
+      ],
+      "options": {
+        "cwd": "${workspaceFolder}"
+      },
+      "dependsOn": "Build resources (MinGW)",
+      "group": "build",
+      "problemMatcher": ["$gcc"]
+    },
+    {
+      "label": "Build Lab6, Object2 and Object3 (MinGW)",
+      "dependsOn": [
+        "Build Lab6 (MinGW)",
+        "Build Object2 (MinGW)",
+        "Build Object3 (MinGW)"
+      ],
+      "dependsOrder": "sequence",
+      "group": {
+        "kind": "build",
+        "isDefault": true
+      },
+      "problemMatcher": []
+    }
+  ]
+}

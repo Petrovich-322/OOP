@@ -3,6 +3,10 @@
 #include "framework.h"
 #include "shapes.h"
 #include "resource.h"
+#include <fstream>
+#include <string>
+#include <vector>
+#include <filesystem>
 
 class PAINTER
 {

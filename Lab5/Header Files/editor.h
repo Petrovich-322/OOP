@@ -3,6 +3,7 @@
 #include "framework.h"
 #include "resource.h"
 #include "painter.h"
+#include "table.h"
 
 #include <commctrl.h>
 

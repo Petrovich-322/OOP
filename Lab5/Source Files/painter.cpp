@@ -1,8 +1,4 @@
-#include "framework.h"
 #include "painter.h"
-#include "fstream"
-#include "string"
-#include "vector"
 
 PAINTER& PAINTER::GetInstance()
 {
@@ -152,40 +148,35 @@ void PAINTER::DrawAll(HDC hdc) const
     DeleteObject(defPen);
 }
 
+static std::string WideToUtf8(const std::wstring& wstr)
+{
+    if (wstr.empty()) return {};
+    int size = WideCharToMultiByte(CP_UTF8, 0, wstr.data(), (int)wstr.size(), nullptr, 0, nullptr, nullptr);
+    if (size <= 0) return {};
+    std::string result(size, 0);
+    WideCharToMultiByte(CP_UTF8, 0, wstr.data(), (int)wstr.size(), &result[0], size, nullptr, nullptr);
+    return result;
+}
+
 bool PAINTER::SaveToCSV(const std::wstring& filePath) const
 {
-    int len = WideCharToMultiByte(CP_ACP, 0, filePath.c_str(), -1, NULL, 0, NULL, NULL);
-    std::string narrowPath(len, 0);
-    WideCharToMultiByte(CP_ACP, 0, filePath.c_str(), -1, &narrowPath[0], len, NULL, NULL);
-
-    std::ofstream file(narrowPath.c_str(), std::ios::out | std::ios::binary);
+    std::ofstream file(std::filesystem::path(filePath), std::ios::out | std::ios::binary);
     if (!file.is_open())
     {
         return false;
     }
 
-    const unsigned char bom[3] = { 0xEF, 0xBB, 0xBF };
-    file.write((const char*)bom, 3);
+    file.write("\xEF\xBB\xBF", 3);
 
-    std::string header = "ID;Type;X1;Y1;X2;Y2\r\n";
-    file.write(header.c_str(), header.length());
+    file << "ID;Type;X1;Y1;X2;Y2\r\n";
 
     for (size_t i = 0; i < shapes.size(); ++i)
     {
         if (shapes[i] != nullptr)
         {
-            std::wstring line = std::to_wstring(i + 1) + L";" + shapes[i]->ToCSV() + L"\r\n";
-
-            int bytesNeeded = WideCharToMultiByte(CP_UTF8, 0, line.c_str(), (int)line.length(), NULL, 0, NULL, NULL);
-            if (bytesNeeded > 0)
-            {
-                std::string utf8Line(bytesNeeded, 0);
-                WideCharToMultiByte(CP_UTF8, 0, line.c_str(), (int)line.length(), &utf8Line[0], bytesNeeded, NULL, NULL);
-                file.write(utf8Line.c_str(), utf8Line.length());
-            }
+            file << (i + 1) << ';' << WideToUtf8(shapes[i]->ToCSV()) << "\r\n";
         }
     }
 
-    file.close();
     return true;
 }
